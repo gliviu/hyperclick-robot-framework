@@ -1,0 +1,39 @@
+{
+  "name": "hyperclick-robot-framework",
+  "main": "./lib/main",
+  "version": "0.0.1",
+  "description": "Robot Framework hyperclick provider for Atom",
+  "keywords": [
+    "hyperclick",
+    "robot",
+    "framework"
+  ],
+  "repository": "https://github.com/gliviu/hyperclick-robot-framework",
+  "bugs": {
+    "url": "https://github.com/gliviu/hyperclick-robot-framework/issues"
+  },
+  "license": "MIT",
+  "engines": {
+    "atom": ">1.0.0"
+  },
+  "providedServices": {
+    "hyperclick.provider": {
+      "versions": {
+        "0.0.0": "getHyperclickProvider"
+      }
+    }
+  },
+  "consumedServices": {
+    "autocomplete.robot.provider": {
+      "versions": {
+        "1.0.0": "getAutocompleteRobotConsumer"
+      }
+    }
+  },
+  "package-deps": [
+    "hyperclick"
+  ],
+  "scripts": {
+    "test": "apm test"
+  }
+}
