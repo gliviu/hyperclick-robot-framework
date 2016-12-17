@@ -42,7 +42,10 @@ module.exports =
     if(highlightedKeywords.length==1)
       keyword = highlightedKeywords[0]
       callback = ->
-        atom.workspace.open(keyword.resource.path, {initialLine: keyword.startRowNo, initialColumn: keyword.startColNo}).catch (error) ->
+        atom.workspace.open(keyword.resource.path, {initialLine: keyword.startRowNo, initialColumn: keyword.startColNo})
+        .then (editor) -> 
+          editor.scrollToCursorPosition()
+        .catch (error) ->
           console.log "Error opening editor: #{error}"
     else
       callback = []
