@@ -14,4 +14,8 @@ apm install hyperclick-robot-framework
 Hold Ctrl while hovering the mouse or use 'ctrl-alt-enter' (windows & linux) to highlight keywords and open the definition.
 Check out  [Hyperclick](https://atom.io/packages/hyperclick) for more information.
 
+This package depends on [autocomplete-robot-framework](https://atom.io/packages/autocomplete-robot-framework) for keyword informatio. Various settings can be toggled in that package.
+
+One important configuration that affects go to definition is 'exclude directories'. Sometimes one keyword may be found in more than one robot resource resulting in hyperclick showing multiple sources. Excluding directories can be controlled from [autocomplete-robot-framework](https://atom.io/packages/autocomplete-robot-framework) settings.
+
 Known issue -  dot notation (ie. Library.keyword) is not currently supported.
