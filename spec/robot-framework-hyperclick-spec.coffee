@@ -88,8 +88,9 @@ describe 'Robot Framework Hyperclick',  ->
       expect(JSON.stringify(suggestion.range)).toEqual(JSON.stringify(new Range([21,4], [21, 18])))
       suggestion.callback()
       expect(atom.workspace.open).toHaveBeenCalled()
-      expect(pathUtils.basename(atom.workspace.open.argsForCall[0][0])).toBe("BuiltIn.xml")
-      assert.deepEqual(atom.workspace.open.argsForCall[0][1], {initialLine: 1523, initialColumn: 0})
+      expect(pathUtils.basename(atom.workspace.open.argsForCall[0][0])).toBe("BuiltIn.py")
+      expect(atom.workspace.open.argsForCall[0][1].initialLine).toBeGreaterThan(0)
+      expect(atom.workspace.open.argsForCall[0][1].initialColumn).toEqual(0)
   it 'handles multiple keywords on the same line', ->
     runs ->
       suggestion = hyperclickProvider.getSuggestion(editor, new Point(22, 6)) # Log
@@ -97,8 +98,9 @@ describe 'Robot Framework Hyperclick',  ->
       expect(JSON.stringify(suggestion.range)).toEqual(JSON.stringify(new Range([22,4], [22, 7])))
       suggestion.callback()
       expect(atom.workspace.open).toHaveBeenCalled()
-      expect(pathUtils.basename(atom.workspace.open.argsForCall[0][0])).toBe("BuiltIn.xml")
-      assert.deepEqual(atom.workspace.open.argsForCall[0][1], {initialLine: 972, initialColumn: 0})
+      expect(pathUtils.basename(atom.workspace.open.argsForCall[0][0])).toBe("BuiltIn.py")
+      expect(atom.workspace.open.argsForCall[0][1].initialLine).toBeGreaterThan(0)
+      expect(atom.workspace.open.argsForCall[0][1].initialColumn).toEqual(0)
   it 'handles multiple keywords on the same line', ->
     runs ->
       suggestion = hyperclickProvider.getSuggestion(editor, new Point(22, 17)) # Run Keyword If
@@ -106,8 +108,9 @@ describe 'Robot Framework Hyperclick',  ->
       expect(JSON.stringify(suggestion.range)).toEqual(JSON.stringify(new Range([22,9], [22, 23])))
       suggestion.callback()
       expect(atom.workspace.open).toHaveBeenCalled()
-      expect(pathUtils.basename(atom.workspace.open.argsForCall[0][0])).toBe("BuiltIn.xml")
-      assert.deepEqual(atom.workspace.open.argsForCall[0][1], {initialLine: 1523, initialColumn: 0})
+      expect(pathUtils.basename(atom.workspace.open.argsForCall[0][0])).toBe("BuiltIn.py")
+      expect(atom.workspace.open.argsForCall[0][1].initialLine).toBeGreaterThan(0)
+      expect(atom.workspace.open.argsForCall[0][1].initialColumn).toEqual(0)
   it 'handles multiple keywords on the same line', ->
     runs ->
       suggestion = hyperclickProvider.getSuggestion(editor, new Point(22, 51)) # test gotodef 3
