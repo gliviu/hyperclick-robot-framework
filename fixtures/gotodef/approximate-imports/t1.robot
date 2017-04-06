@@ -1,7 +1,7 @@
 *settings*
 Library  gotodeflib1
-Resource  1/kw1.robot
-Resource  1/kw4.robot
+Resource  ${1}/kw1.robot
+Resource  ${1}/kw4.robot
 
 
 

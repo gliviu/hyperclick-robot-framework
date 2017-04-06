@@ -124,103 +124,120 @@ describe 'Robot Framework Hyperclick',  ->
         expect(atom.workspace.open).toHaveBeenCalled()
         expect(pathUtils.basename(atom.workspace.open.argsForCall[0][0])).toBe("GotoDef2.robot")
         assert.deepEqual(atom.workspace.open.argsForCall[0][1], {initialLine: 2, initialColumn: 0})
-  describe 'Use imports hints to find proper suggestions',  ->
+  describe 'Approximate import resolution',  ->
     it 'proposes only suggestions from imported libraries - one import', ->
-      waitsForPromise -> atom.workspace.open('gotodef/import-hints/t1.robot')
+      waitsForPromise -> atom.workspace.open('gotodef/approximate-imports/t1.robot')
       runs ->
         editor = atom.workspace.getActiveTextEditor()
       runs ->
-        suggestion = hyperclickProvider.getSuggestion(editor, new Point(13, 5)) # Post
+        suggestion = hyperclickProvider.getSuggestion(editor, new Point(13, 5))  # Impkw
         expect(suggestion).toBeDefined()
         expect(Array.isArray(suggestion.callback)).toBeFalsy()
-      waitsForPromise -> atom.workspace.open('gotodef/import-hints/t2.robot')
+      waitsForPromise -> atom.workspace.open('gotodef/approximate-imports/t2.robot')
       runs ->
         editor = atom.workspace.getActiveTextEditor()
       runs ->
-        suggestion = hyperclickProvider.getSuggestion(editor, new Point(12, 5)) # Post
+        suggestion = hyperclickProvider.getSuggestion(editor, new Point(12, 5))
         expect(suggestion).toBeDefined()
         expect(Array.isArray(suggestion.callback)).toBeFalsy()
     it 'proposes only suggestions from imported libraries - multiple imports', ->
-      waitsForPromise -> atom.workspace.open('gotodef/import-hints/t3.robot')
+      waitsForPromise -> atom.workspace.open('gotodef/approximate-imports/t3.robot')
       runs ->
         editor = atom.workspace.getActiveTextEditor()
       runs ->
-        suggestion = hyperclickProvider.getSuggestion(editor, new Point(17, 5)) # Post
+        suggestion = hyperclickProvider.getSuggestion(editor, new Point(17, 5))
         expect(suggestion).toBeDefined()
         expect(Array.isArray(suggestion.callback)).toBeTruthy()
         expect(suggestion.callback.length).toEqual(2)
     it 'proposes all suggestions when no import library is found', ->
-      waitsForPromise -> atom.workspace.open('gotodef/import-hints/t4.robot')
+      waitsForPromise -> atom.workspace.open('gotodef/approximate-imports/t4.robot')
       runs ->
         editor = atom.workspace.getActiveTextEditor()
       runs ->
-        suggestion = hyperclickProvider.getSuggestion(editor, new Point(9, 5)) # Post
+        suggestion = hyperclickProvider.getSuggestion(editor, new Point(9, 5))
         expect(suggestion).toBeDefined()
         expect(Array.isArray(suggestion.callback)).toBeTruthy()
         expect(suggestion.callback.length).toEqual(3)
     it 'proposes only suggestions from imported resources - one import', ->
-      waitsForPromise -> atom.workspace.open('gotodef/import-hints/t1.robot')
+      waitsForPromise -> atom.workspace.open('gotodef/approximate-imports/t1.robot')
       runs ->
         editor = atom.workspace.getActiveTextEditor()
       runs ->
-        suggestion = hyperclickProvider.getSuggestion(editor, new Point(14, 5)) # Post
+        suggestion = hyperclickProvider.getSuggestion(editor, new Point(14, 5)) # impkwx
         expect(suggestion).toBeDefined()
         expect(Array.isArray(suggestion.callback)).toBeFalsy()
-      waitsForPromise -> atom.workspace.open('gotodef/import-hints/t2.robot')
+      waitsForPromise -> atom.workspace.open('gotodef/approximate-imports/t2.robot')
       runs ->
         editor = atom.workspace.getActiveTextEditor()
       runs ->
-        suggestion = hyperclickProvider.getSuggestion(editor, new Point(13, 5)) # Post
+        suggestion = hyperclickProvider.getSuggestion(editor, new Point(13, 5))
         expect(suggestion).toBeDefined()
         expect(Array.isArray(suggestion.callback)).toBeFalsy()
     it 'proposes only suggestions from imported resources - multiple imports', ->
-      waitsForPromise -> atom.workspace.open('gotodef/import-hints/t3.robot')
+      waitsForPromise -> atom.workspace.open('gotodef/approximate-imports/t3.robot')
       runs ->
         editor = atom.workspace.getActiveTextEditor()
       runs ->
-        suggestion = hyperclickProvider.getSuggestion(editor, new Point(18, 5)) # Post
+        suggestion = hyperclickProvider.getSuggestion(editor, new Point(18, 5))
         expect(suggestion).toBeDefined()
         expect(Array.isArray(suggestion.callback)).toBeTruthy()
         expect(suggestion.callback.length).toEqual(2)
     it 'proposes all suggestions when no import resource is found', ->
-      waitsForPromise -> atom.workspace.open('gotodef/import-hints/t4.robot')
+      waitsForPromise -> atom.workspace.open('gotodef/approximate-imports/t4.robot')
       runs ->
         editor = atom.workspace.getActiveTextEditor()
       runs ->
-        suggestion = hyperclickProvider.getSuggestion(editor, new Point(10, 5)) # Post
+        suggestion = hyperclickProvider.getSuggestion(editor, new Point(10, 5))
         expect(suggestion).toBeDefined()
         expect(Array.isArray(suggestion.callback)).toBeTruthy()
         expect(suggestion.callback.length).toEqual(3)
     it 'proposes all suggestions from resources with same name, disregarding imports', ->
-      waitsForPromise -> atom.workspace.open('gotodef/import-hints/t1.robot')
+      waitsForPromise -> atom.workspace.open('gotodef/approximate-imports/t1.robot')
       runs ->
         editor = atom.workspace.getActiveTextEditor()
       runs ->
-        suggestion = hyperclickProvider.getSuggestion(editor, new Point(15, 5)) # Post
+        suggestion = hyperclickProvider.getSuggestion(editor, new Point(15, 5))  # impkwy
         expect(suggestion).toBeDefined()
         expect(Array.isArray(suggestion.callback)).toBeTruthy()
         expect(suggestion.callback.length).toEqual(2)
-      waitsForPromise -> atom.workspace.open('gotodef/import-hints/t2.robot')
+      waitsForPromise -> atom.workspace.open('gotodef/approximate-imports/t2.robot')
       runs ->
         editor = atom.workspace.getActiveTextEditor()
       runs ->
-        suggestion = hyperclickProvider.getSuggestion(editor, new Point(14, 5)) # Post
+        suggestion = hyperclickProvider.getSuggestion(editor, new Point(14, 5))
         expect(suggestion).toBeDefined()
         expect(Array.isArray(suggestion.callback)).toBeTruthy()
         expect(suggestion.callback.length).toEqual(2)
-      waitsForPromise -> atom.workspace.open('gotodef/import-hints/t3.robot')
+      waitsForPromise -> atom.workspace.open('gotodef/approximate-imports/t3.robot')
       runs ->
         editor = atom.workspace.getActiveTextEditor()
       runs ->
-        suggestion = hyperclickProvider.getSuggestion(editor, new Point(19, 5)) # Post
+        suggestion = hyperclickProvider.getSuggestion(editor, new Point(19, 5))
         expect(suggestion).toBeDefined()
         expect(Array.isArray(suggestion.callback)).toBeTruthy()
         expect(suggestion.callback.length).toEqual(2)
-      waitsForPromise -> atom.workspace.open('gotodef/import-hints/t4.robot')
+      waitsForPromise -> atom.workspace.open('gotodef/approximate-imports/t4.robot')
       runs ->
         editor = atom.workspace.getActiveTextEditor()
       runs ->
-        suggestion = hyperclickProvider.getSuggestion(editor, new Point(11, 5)) # Post
+        suggestion = hyperclickProvider.getSuggestion(editor, new Point(11, 5))
         expect(suggestion).toBeDefined()
         expect(Array.isArray(suggestion.callback)).toBeTruthy()
         expect(suggestion.callback.length).toEqual(2)
+  describe 'Accurate import resolution',  ->
+    it 'proposes one suggestion when single import is determined', ->
+      waitsForPromise -> atom.workspace.open('gotodef/accurate-imports/t1.robot')
+      runs ->
+        editor = atom.workspace.getActiveTextEditor()
+      runs ->
+        suggestion = hyperclickProvider.getSuggestion(editor, new Point(5, 5))
+        expect(suggestion).toBeDefined()
+        expect(Array.isArray(suggestion.callback)).toBeFalsy()
+    it 'proposes multiple suggestions if multiple imports resolved', ->
+      waitsForPromise -> atom.workspace.open('gotodef/accurate-imports/t2.robot')
+      runs ->
+        editor = atom.workspace.getActiveTextEditor()
+      runs ->
+        suggestion = hyperclickProvider.getSuggestion(editor, new Point(6, 5))
+        expect(suggestion).toBeDefined()
+        expect(Array.isArray(suggestion.callback)).toBeTruthy()
