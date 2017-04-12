@@ -7,6 +7,7 @@ TIMEOUT=5000
 describe 'Robot Framework Hyperclick',  ->
   fixturePath = "#{__dirname}/../fixtures/gotodef"
   [editor, hyperclickProvider, autocompletePlusProvider] = []
+  origOpen = atom.workspace.open
   beforeEach ->
     waitsForPromise -> atom.packages.activatePackage('language-robot-framework')
     waitsForPromise -> atom.packages.activatePackage('autocomplete-robot-framework')
@@ -18,6 +19,8 @@ describe 'Robot Framework Hyperclick',  ->
     waitsFor ->
       return !autocompletePlusProvider.loading
     , 'Provider should finish loading', TIMEOUT
+  afterEach ->
+      atom.workspace.open = origOpen
   describe 'Test hyperclick opens new editor',  ->
     origOpen = atom.workspace.open
     beforeEach ->
@@ -25,8 +28,6 @@ describe 'Robot Framework Hyperclick',  ->
         editor = atom.workspace.getActiveTextEditor()
       runs ->
         atom.workspace.open = jasmine.createSpy("atom.workspace.open() spy").andReturn(Promise.resolve())
-    afterEach ->
-        atom.workspace.open = origOpen
     it 'offers suggestions if clicked inside keyword', ->
       runs ->
         suggestion = hyperclickProvider.getSuggestion(editor, new Point(2, 5))
@@ -126,14 +127,14 @@ describe 'Robot Framework Hyperclick',  ->
         assert.deepEqual(atom.workspace.open.argsForCall[0][1], {initialLine: 2, initialColumn: 0})
   describe 'Approximate import resolution',  ->
     it 'proposes only suggestions from imported libraries - one import', ->
-      waitsForPromise -> atom.workspace.open('gotodef/approximate-imports/t1.robot')
+      waitsForPromise -> atom.workspace.open('gotodef/approximate-resource-imports/t1.robot')
       runs ->
         editor = atom.workspace.getActiveTextEditor()
       runs ->
         suggestion = hyperclickProvider.getSuggestion(editor, new Point(13, 5))  # Impkw
         expect(suggestion).toBeDefined()
         expect(Array.isArray(suggestion.callback)).toBeFalsy()
-      waitsForPromise -> atom.workspace.open('gotodef/approximate-imports/t2.robot')
+      waitsForPromise -> atom.workspace.open('gotodef/approximate-resource-imports/t2.robot')
       runs ->
         editor = atom.workspace.getActiveTextEditor()
       runs ->
@@ -141,7 +142,7 @@ describe 'Robot Framework Hyperclick',  ->
         expect(suggestion).toBeDefined()
         expect(Array.isArray(suggestion.callback)).toBeFalsy()
     it 'proposes only suggestions from imported libraries - multiple imports', ->
-      waitsForPromise -> atom.workspace.open('gotodef/approximate-imports/t3.robot')
+      waitsForPromise -> atom.workspace.open('gotodef/approximate-resource-imports/t3.robot')
       runs ->
         editor = atom.workspace.getActiveTextEditor()
       runs ->
@@ -150,7 +151,7 @@ describe 'Robot Framework Hyperclick',  ->
         expect(Array.isArray(suggestion.callback)).toBeTruthy()
         expect(suggestion.callback.length).toEqual(2)
     it 'proposes all suggestions when no import library is found', ->
-      waitsForPromise -> atom.workspace.open('gotodef/approximate-imports/t4.robot')
+      waitsForPromise -> atom.workspace.open('gotodef/approximate-resource-imports/t4.robot')
       runs ->
         editor = atom.workspace.getActiveTextEditor()
       runs ->
@@ -159,14 +160,14 @@ describe 'Robot Framework Hyperclick',  ->
         expect(Array.isArray(suggestion.callback)).toBeTruthy()
         expect(suggestion.callback.length).toEqual(3)
     it 'proposes only suggestions from imported resources - one import', ->
-      waitsForPromise -> atom.workspace.open('gotodef/approximate-imports/t1.robot')
+      waitsForPromise -> atom.workspace.open('gotodef/approximate-resource-imports/t1.robot')
       runs ->
         editor = atom.workspace.getActiveTextEditor()
       runs ->
         suggestion = hyperclickProvider.getSuggestion(editor, new Point(14, 5)) # impkwx
         expect(suggestion).toBeDefined()
         expect(Array.isArray(suggestion.callback)).toBeFalsy()
-      waitsForPromise -> atom.workspace.open('gotodef/approximate-imports/t2.robot')
+      waitsForPromise -> atom.workspace.open('gotodef/approximate-resource-imports/t2.robot')
       runs ->
         editor = atom.workspace.getActiveTextEditor()
       runs ->
@@ -174,7 +175,7 @@ describe 'Robot Framework Hyperclick',  ->
         expect(suggestion).toBeDefined()
         expect(Array.isArray(suggestion.callback)).toBeFalsy()
     it 'proposes only suggestions from imported resources - multiple imports', ->
-      waitsForPromise -> atom.workspace.open('gotodef/approximate-imports/t3.robot')
+      waitsForPromise -> atom.workspace.open('gotodef/approximate-resource-imports/t3.robot')
       runs ->
         editor = atom.workspace.getActiveTextEditor()
       runs ->
@@ -183,7 +184,7 @@ describe 'Robot Framework Hyperclick',  ->
         expect(Array.isArray(suggestion.callback)).toBeTruthy()
         expect(suggestion.callback.length).toEqual(2)
     it 'proposes all suggestions when no import resource is found', ->
-      waitsForPromise -> atom.workspace.open('gotodef/approximate-imports/t4.robot')
+      waitsForPromise -> atom.workspace.open('gotodef/approximate-resource-imports/t4.robot')
       runs ->
         editor = atom.workspace.getActiveTextEditor()
       runs ->
@@ -192,7 +193,7 @@ describe 'Robot Framework Hyperclick',  ->
         expect(Array.isArray(suggestion.callback)).toBeTruthy()
         expect(suggestion.callback.length).toEqual(3)
     it 'proposes all suggestions from resources with same name, disregarding imports', ->
-      waitsForPromise -> atom.workspace.open('gotodef/approximate-imports/t1.robot')
+      waitsForPromise -> atom.workspace.open('gotodef/approximate-resource-imports/t1.robot')
       runs ->
         editor = atom.workspace.getActiveTextEditor()
       runs ->
@@ -200,7 +201,7 @@ describe 'Robot Framework Hyperclick',  ->
         expect(suggestion).toBeDefined()
         expect(Array.isArray(suggestion.callback)).toBeTruthy()
         expect(suggestion.callback.length).toEqual(2)
-      waitsForPromise -> atom.workspace.open('gotodef/approximate-imports/t2.robot')
+      waitsForPromise -> atom.workspace.open('gotodef/approximate-resource-imports/t2.robot')
       runs ->
         editor = atom.workspace.getActiveTextEditor()
       runs ->
@@ -208,7 +209,7 @@ describe 'Robot Framework Hyperclick',  ->
         expect(suggestion).toBeDefined()
         expect(Array.isArray(suggestion.callback)).toBeTruthy()
         expect(suggestion.callback.length).toEqual(2)
-      waitsForPromise -> atom.workspace.open('gotodef/approximate-imports/t3.robot')
+      waitsForPromise -> atom.workspace.open('gotodef/approximate-resource-imports/t3.robot')
       runs ->
         editor = atom.workspace.getActiveTextEditor()
       runs ->
@@ -216,7 +217,7 @@ describe 'Robot Framework Hyperclick',  ->
         expect(suggestion).toBeDefined()
         expect(Array.isArray(suggestion.callback)).toBeTruthy()
         expect(suggestion.callback.length).toEqual(2)
-      waitsForPromise -> atom.workspace.open('gotodef/approximate-imports/t4.robot')
+      waitsForPromise -> atom.workspace.open('gotodef/approximate-resource-imports/t4.robot')
       runs ->
         editor = atom.workspace.getActiveTextEditor()
       runs ->
@@ -226,18 +227,115 @@ describe 'Robot Framework Hyperclick',  ->
         expect(suggestion.callback.length).toEqual(2)
   describe 'Accurate import resolution',  ->
     it 'proposes one suggestion when single import is determined', ->
-      waitsForPromise -> atom.workspace.open('gotodef/accurate-imports/t1.robot')
+      waitsForPromise -> atom.workspace.open('gotodef/accurate-resource-imports/t1.robot')
+      runs -> editor = atom.workspace.getActiveTextEditor()
+      runs -> atom.workspace.open = jasmine.createSpy("atom.workspace.open() spy").andReturn(Promise.resolve())
       runs ->
-        editor = atom.workspace.getActiveTextEditor()
-      runs ->
-        suggestion = hyperclickProvider.getSuggestion(editor, new Point(5, 5))
+        suggestion = hyperclickProvider.getSuggestion(editor, new Point(15, 5))  # aci1kw
         expect(suggestion).toBeDefined()
         expect(Array.isArray(suggestion.callback)).toBeFalsy()
+        suggestion.callback()
+        expect(atom.workspace.open).toHaveBeenCalled()
+        path = atom.workspace.open.argsForCall[0][0]
+        expect(path.endsWith('0/aci1.robot')).toBeTruthy()
     it 'proposes multiple suggestions if multiple imports resolved', ->
-      waitsForPromise -> atom.workspace.open('gotodef/accurate-imports/t2.robot')
+      waitsForPromise -> atom.workspace.open('gotodef/accurate-resource-imports/t2.robot')
+      runs -> editor = atom.workspace.getActiveTextEditor()
       runs ->
-        editor = atom.workspace.getActiveTextEditor()
-      runs ->
-        suggestion = hyperclickProvider.getSuggestion(editor, new Point(6, 5))
+        suggestion = hyperclickProvider.getSuggestion(editor, new Point(16, 5))  # aci1kw
         expect(suggestion).toBeDefined()
         expect(Array.isArray(suggestion.callback)).toBeTruthy()
+    it 'suggests relative import in same directory', ->
+      waitsForPromise -> atom.workspace.open('gotodef/accurate-resource-imports/t1.robot')
+      runs -> editor = atom.workspace.getActiveTextEditor()
+      runs -> atom.workspace.open = jasmine.createSpy("atom.workspace.open() spy").andReturn(Promise.resolve())
+      runs ->
+        suggestion = hyperclickProvider.getSuggestion(editor, new Point(16, 5))  # aci2kw
+        expect(suggestion).toBeDefined()
+        expect(Array.isArray(suggestion.callback)).toBeFalsy()
+        suggestion.callback()
+        expect(atom.workspace.open).toHaveBeenCalled()
+        path = atom.workspace.open.argsForCall[0][0]
+        expect(path.endsWith('accurate-resource-imports/aci2.robot')).toBeTruthy()
+    it 'suggests relative import in diffrent directory', ->
+      waitsForPromise -> atom.workspace.open('gotodef/accurate-resource-imports/t2.robot')
+      runs -> editor = atom.workspace.getActiveTextEditor()
+      runs -> atom.workspace.open = jasmine.createSpy("atom.workspace.open() spy").andReturn(Promise.resolve())
+      runs ->
+        suggestion = hyperclickProvider.getSuggestion(editor, new Point(17, 5))  # aci2kw
+        expect(suggestion).toBeDefined()
+        expect(Array.isArray(suggestion.callback)).toBeFalsy()
+        suggestion.callback()
+        expect(atom.workspace.open).toHaveBeenCalled()
+        path = atom.workspace.open.argsForCall[0][0]
+        expect(path.endsWith('1/aci2.robot')).toBeTruthy()
+  describe 'Hyperclick into imported resources',  ->
+    it 'suggests accurate relative import in different directory', ->
+      waitsForPromise -> atom.workspace.open('gotodef/accurate-resource-imports/t1.robot')
+      runs -> editor = atom.workspace.getActiveTextEditor()
+      runs -> atom.workspace.open = jasmine.createSpy("atom.workspace.open() spy").andReturn(Promise.resolve())
+      runs ->
+        suggestion = hyperclickProvider.getSuggestion(editor, new Point(1, 15))  # 0/aci1.robot
+        expect(suggestion).toBeDefined()
+        expect(Array.isArray(suggestion.callback)).toBeFalsy()
+        suggestion.callback()
+        expect(atom.workspace.open).toHaveBeenCalled()
+        path = atom.workspace.open.argsForCall[0][0]
+        expect(path.endsWith('0/aci1.robot')).toBeTruthy()
+    it 'suggests accurate relative import in same directory', ->
+      waitsForPromise -> atom.workspace.open('gotodef/accurate-resource-imports/t1.robot')
+      runs -> editor = atom.workspace.getActiveTextEditor()
+      runs -> atom.workspace.open = jasmine.createSpy("atom.workspace.open() spy").andReturn(Promise.resolve())
+      runs ->
+        suggestion = hyperclickProvider.getSuggestion(editor, new Point(2, 15))  # aci2.robot
+        expect(suggestion).toBeDefined()
+        expect(Array.isArray(suggestion.callback)).toBeFalsy()
+        suggestion.callback()
+        expect(atom.workspace.open).toHaveBeenCalled()
+        path = atom.workspace.open.argsForCall[0][0]
+        expect(path.endsWith('accurate-resource-imports/aci2.robot')).toBeTruthy()
+    it 'suggests single approximate import', ->
+      waitsForPromise -> atom.workspace.open('gotodef/approximate-resource-imports/t1.robot')
+      runs -> editor = atom.workspace.getActiveTextEditor()
+      runs -> atom.workspace.open = jasmine.createSpy("atom.workspace.open() spy").andReturn(Promise.resolve())
+      runs ->
+        suggestion = hyperclickProvider.getSuggestion(editor, new Point(2, 15))  # ${1}/kw1.robot
+        expect(suggestion).toBeDefined()
+        expect(Array.isArray(suggestion.callback)).toBeFalsy()
+        suggestion.callback()
+        expect(atom.workspace.open).toHaveBeenCalled()
+        path = atom.workspace.open.argsForCall[0][0]
+        expect(path.endsWith('1/kw1.robot')).toBeTruthy()
+    it 'suggests multiple approximate imports', ->
+      waitsForPromise -> atom.workspace.open('gotodef/approximate-resource-imports/t1.robot')
+      runs -> editor = atom.workspace.getActiveTextEditor()
+      runs -> atom.workspace.open = jasmine.createSpy("atom.workspace.open() spy").andReturn(Promise.resolve())
+      runs ->
+        suggestion = hyperclickProvider.getSuggestion(editor, new Point(3, 15))  # ${1}/kw4.robot
+        expect(suggestion).toBeDefined()
+        expect(Array.isArray(suggestion.callback)).toBeTruthy()
+  describe 'Hyperclick into imported libraries',  ->
+    it 'suggests imported python library', ->
+      waitsForPromise -> atom.workspace.open('gotodef/library-imports/libimp1.robot')
+      runs -> editor = atom.workspace.getActiveTextEditor()
+      runs -> atom.workspace.open = jasmine.createSpy("atom.workspace.open() spy").andReturn(Promise.resolve())
+      runs ->
+        suggestion = hyperclickProvider.getSuggestion(editor, new Point(1, 15))  # Collections
+        expect(suggestion).toBeDefined()
+        expect(Array.isArray(suggestion.callback)).toBeFalsy()
+        suggestion.callback()
+        expect(atom.workspace.open).toHaveBeenCalled()
+        path = atom.workspace.open.argsForCall[0][0]
+        expect(path.endsWith('Collections.py')).toBeTruthy()
+    it 'suggests imported libdoc library', ->
+      waitsForPromise -> atom.workspace.open('gotodef/library-imports/libimp1.robot')
+      runs -> editor = atom.workspace.getActiveTextEditor()
+      runs -> atom.workspace.open = jasmine.createSpy("atom.workspace.open() spy").andReturn(Promise.resolve())
+      runs ->
+        suggestion = hyperclickProvider.getSuggestion(editor, new Point(2, 15))  # LibdocLib
+        expect(suggestion).toBeDefined()
+        expect(Array.isArray(suggestion.callback)).toBeFalsy()
+        suggestion.callback()
+        expect(atom.workspace.open).toHaveBeenCalled()
+        path = atom.workspace.open.argsForCall[0][0]
+        expect(path.endsWith('LibdocLib.xml')).toBeTruthy()

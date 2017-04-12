@@ -19,3 +19,8 @@ This package depends on [autocomplete-robot-framework](https://atom.io/packages/
 One important configuration that affects go to definition is 'exclude directories'. Sometimes one keyword may be found in more than one robot resource resulting in hyperclick showing multiple sources. Excluding directories can be controlled from [autocomplete-robot-framework](https://atom.io/packages/autocomplete-robot-framework) settings.
 
 Known issue -  dot notation (ie. Library.keyword) is not currently supported.
+
+## Changelog
+* v1.5.0 Hyperclick into imports
+* v1.3.0 Auto download Atom dependencies using [package-deps](https://github.com/steelbrain/package-deps)
+* v1.2.0 Hyperclick into python libraries
