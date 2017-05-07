@@ -21,3 +21,4 @@ test gotodef 5
     test gotodef 8
     Run Keyword If    cond=true
     log  Run Keyword If    condition=true    test gotodef 3    ${aa}
+    GotoDef2.test gotodef 3

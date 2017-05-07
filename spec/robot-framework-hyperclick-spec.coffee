@@ -66,7 +66,7 @@ describe 'Robot Framework Hyperclick',  ->
         assert.deepEqual(atom.workspace.open.argsForCall[0][1], {initialLine: 4, initialColumn: 0})
     it 'handles keyword with multiple definitions', ->
       runs ->
-        suggestion = hyperclickProvider.getSuggestion(editor, new Point(7, 9))
+        suggestion = hyperclickProvider.getSuggestion(editor, new Point(7, 9))  # test gotodef 5
         expect(suggestion).toBeDefined()
         expect(JSON.stringify(suggestion.range)).toEqual(JSON.stringify(new Range([7,4], [7, 18])))
         expect(suggestion.callback.length).toBe(3)
@@ -118,9 +118,18 @@ describe 'Robot Framework Hyperclick',  ->
         expect(atom.workspace.open.argsForCall[0][1].initialColumn).toEqual(0)
     it 'handles multiple keywords on the same line', ->
       runs ->
-        suggestion = hyperclickProvider.getSuggestion(editor, new Point(22, 51)) # test gotodef 3
+        suggestion = hyperclickProvider.getSuggestion(editor, new Point(22, 51)) # log -> Run Keyword If -> test gotodef 3
         expect(suggestion).toBeDefined()
         expect(JSON.stringify(suggestion.range)).toEqual(JSON.stringify(new Range([22,45], [22, 59])))
+        suggestion.callback()
+        expect(atom.workspace.open).toHaveBeenCalled()
+        expect(pathUtils.basename(atom.workspace.open.argsForCall[0][0])).toBe("GotoDef2.robot")
+        assert.deepEqual(atom.workspace.open.argsForCall[0][1], {initialLine: 2, initialColumn: 0})
+    it 'handles keyword prefixed with resource', ->
+      runs ->
+        suggestion = hyperclickProvider.getSuggestion(editor, new Point(23, 10)) # GotoDef2.test gotodef 3
+        expect(suggestion).toBeDefined()
+        expect(JSON.stringify(suggestion.range)).toEqual(JSON.stringify(new Range([23,4], [23, 27])))
         suggestion.callback()
         expect(atom.workspace.open).toHaveBeenCalled()
         expect(pathUtils.basename(atom.workspace.open.argsForCall[0][0])).toBe("GotoDef2.robot")
