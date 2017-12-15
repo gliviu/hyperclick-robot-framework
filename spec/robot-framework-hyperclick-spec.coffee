@@ -3,6 +3,7 @@ assert = require 'assert'
 pathUtils = require 'path'
 
 TIMEOUT=5000
+SEP = pathUtils.sep
 
 describe 'Robot Framework Hyperclick',  ->
   fixturePath = "#{__dirname}/../fixtures/gotodef"
@@ -246,7 +247,7 @@ describe 'Robot Framework Hyperclick',  ->
         suggestion.callback()
         expect(atom.workspace.open).toHaveBeenCalled()
         path = atom.workspace.open.argsForCall[0][0]
-        expect(path.endsWith('0/aci1.robot')).toBeTruthy()
+        expect(path.endsWith("0#{SEP}aci1.robot")).toBeTruthy()
     it 'proposes multiple suggestions if multiple imports resolved', ->
       waitsForPromise -> atom.workspace.open('gotodef/accurate-resource-imports/t2.robot')
       runs -> editor = atom.workspace.getActiveTextEditor()
@@ -265,7 +266,7 @@ describe 'Robot Framework Hyperclick',  ->
         suggestion.callback()
         expect(atom.workspace.open).toHaveBeenCalled()
         path = atom.workspace.open.argsForCall[0][0]
-        expect(path.endsWith('accurate-resource-imports/aci2.robot')).toBeTruthy()
+        expect(path.endsWith("accurate-resource-imports#{SEP}aci2.robot")).toBeTruthy()
     it 'suggests relative import in diffrent directory', ->
       waitsForPromise -> atom.workspace.open('gotodef/accurate-resource-imports/t2.robot')
       runs -> editor = atom.workspace.getActiveTextEditor()
@@ -277,7 +278,7 @@ describe 'Robot Framework Hyperclick',  ->
         suggestion.callback()
         expect(atom.workspace.open).toHaveBeenCalled()
         path = atom.workspace.open.argsForCall[0][0]
-        expect(path.endsWith('1/aci2.robot')).toBeTruthy()
+        expect(path.endsWith("1#{SEP}aci2.robot")).toBeTruthy()
   describe 'Hyperclick into imported resources',  ->
     it 'suggests accurate relative import in different directory', ->
       waitsForPromise -> atom.workspace.open('gotodef/accurate-resource-imports/t1.robot')
@@ -290,7 +291,7 @@ describe 'Robot Framework Hyperclick',  ->
         suggestion.callback()
         expect(atom.workspace.open).toHaveBeenCalled()
         path = atom.workspace.open.argsForCall[0][0]
-        expect(path.endsWith('0/aci1.robot')).toBeTruthy()
+        expect(path.endsWith("0#{SEP}aci1.robot")).toBeTruthy()
     it 'suggests accurate relative import in same directory', ->
       waitsForPromise -> atom.workspace.open('gotodef/accurate-resource-imports/t1.robot')
       runs -> editor = atom.workspace.getActiveTextEditor()
@@ -302,7 +303,7 @@ describe 'Robot Framework Hyperclick',  ->
         suggestion.callback()
         expect(atom.workspace.open).toHaveBeenCalled()
         path = atom.workspace.open.argsForCall[0][0]
-        expect(path.endsWith('accurate-resource-imports/aci2.robot')).toBeTruthy()
+        expect(path.endsWith("accurate-resource-imports#{SEP}aci2.robot")).toBeTruthy()
     it 'suggests single approximate import', ->
       waitsForPromise -> atom.workspace.open('gotodef/approximate-resource-imports/t1.robot')
       runs -> editor = atom.workspace.getActiveTextEditor()
@@ -314,7 +315,7 @@ describe 'Robot Framework Hyperclick',  ->
         suggestion.callback()
         expect(atom.workspace.open).toHaveBeenCalled()
         path = atom.workspace.open.argsForCall[0][0]
-        expect(path.endsWith('1/kw1.robot')).toBeTruthy()
+        expect(path.endsWith("1#{SEP}kw1.robot")).toBeTruthy()
     it 'suggests multiple approximate imports', ->
       waitsForPromise -> atom.workspace.open('gotodef/approximate-resource-imports/t1.robot')
       runs -> editor = atom.workspace.getActiveTextEditor()

@@ -1,6 +1,7 @@
 /.settings/
 /.project
 /node_modules
+/lib/test.*
 **/*.pyc
 **/log.html
 **/output.xml
