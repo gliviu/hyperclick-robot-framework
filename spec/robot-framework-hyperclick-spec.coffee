@@ -215,7 +215,7 @@ describe 'Robot Framework Hyperclick',  ->
       runs ->
         editor = atom.workspace.getActiveTextEditor()
       runs ->
-        suggestion = hyperclickProvider.getSuggestion(editor, new Point(14, 5))
+        suggestion = hyperclickProvider.getSuggestion(editor, new Point(14, 5))  # impkwy
         expect(suggestion).toBeDefined()
         expect(Array.isArray(suggestion.callback)).toBeTruthy()
         expect(suggestion.callback.length).toEqual(2)
@@ -223,7 +223,7 @@ describe 'Robot Framework Hyperclick',  ->
       runs ->
         editor = atom.workspace.getActiveTextEditor()
       runs ->
-        suggestion = hyperclickProvider.getSuggestion(editor, new Point(19, 5))
+        suggestion = hyperclickProvider.getSuggestion(editor, new Point(19, 5))  # impkwy
         expect(suggestion).toBeDefined()
         expect(Array.isArray(suggestion.callback)).toBeTruthy()
         expect(suggestion.callback.length).toEqual(2)
