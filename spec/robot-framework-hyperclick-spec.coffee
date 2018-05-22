@@ -135,6 +135,31 @@ describe 'Robot Framework Hyperclick',  ->
         expect(atom.workspace.open).toHaveBeenCalled()
         expect(pathUtils.basename(atom.workspace.open.argsForCall[0][0])).toBe("GotoDef2.robot")
         assert.deepEqual(atom.workspace.open.argsForCall[0][1], {initialLine: 2, initialColumn: 0})
+  describe 'BDD keywords Hyperclick',  ->
+    it 'Hyperclick into BDD keywords', ->
+      waitsForPromise -> atom.workspace.open('gotodef/bdd.robot')
+      runs ->
+        editor = atom.workspace.getActiveTextEditor()
+      runs ->
+        suggestion = hyperclickProvider.getSuggestion(editor, new Point(13, 10))  # Given login page is open
+        expect(suggestion).toBeDefined()
+        expect(Array.isArray(suggestion.callback)).toBeFalsy()
+      runs ->
+        suggestion = hyperclickProvider.getSuggestion(editor, new Point(16, 10))  # When valid username and password are inserted
+        expect(suggestion).toBeDefined()
+        expect(Array.isArray(suggestion.callback)).toBeFalsy()
+      runs ->
+        suggestion = hyperclickProvider.getSuggestion(editor, new Point(19, 10))  # and credentials are submitted
+        expect(suggestion).toBeDefined()
+        expect(Array.isArray(suggestion.callback)).toBeFalsy()
+      runs ->
+        suggestion = hyperclickProvider.getSuggestion(editor, new Point(22, 10))  # Then welcome page should be open
+        expect(suggestion).toBeDefined()
+        expect(Array.isArray(suggestion.callback)).toBeFalsy()
+      runs ->
+        suggestion = hyperclickProvider.getSuggestion(editor, new Point(24, 10))  # but welcome page should be open
+        expect(suggestion).toBeDefined()
+        expect(Array.isArray(suggestion.callback)).toBeFalsy()
   describe 'Approximate import resolution',  ->
     it 'proposes only suggestions from imported libraries - one import', ->
       waitsForPromise -> atom.workspace.open('gotodef/approximate-resource-imports/t1.robot')
