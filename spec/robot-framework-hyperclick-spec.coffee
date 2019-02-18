@@ -260,6 +260,53 @@ describe 'Robot Framework Hyperclick',  ->
         expect(suggestion).toBeDefined()
         expect(Array.isArray(suggestion.callback)).toBeTruthy()
         expect(suggestion.callback.length).toEqual(2)
+    it 'narrows suggestions by keyword resource prefix', ->
+      waitsForPromise -> atom.workspace.open('gotodef/approximate-resource-imports/t1.robot')
+      runs -> editor = atom.workspace.getActiveTextEditor()
+      runs -> atom.workspace.open = jasmine.createSpy("atom.workspace.open() spy").andReturn(Promise.resolve())
+      runs ->
+        suggestion = hyperclickProvider.getSuggestion(editor, new Point(16, 5)) # Keywords3.My first keyword
+        expect(suggestion).toBeDefined()
+        expect(Array.isArray(suggestion.callback)).toBeFalsy()
+        suggestion.callback()
+        expect(atom.workspace.open).toHaveBeenCalled()
+        path = atom.workspace.open.argsForCall[0][0]
+        expect(path.endsWith("1#{SEP}Keywords3.robot")).toBeTruthy()
+
+      waitsForPromise -> atom.workspace.open('gotodef/approximate-resource-imports/t1.robot')
+      runs -> editor = atom.workspace.getActiveTextEditor()
+      runs -> atom.workspace.open = jasmine.createSpy("atom.workspace.open() spy").andReturn(Promise.resolve())
+      runs ->
+        suggestion = hyperclickProvider.getSuggestion(editor, new Point(17, 5)) # Keywords4.My first keyword
+        expect(suggestion).toBeDefined()
+        expect(Array.isArray(suggestion.callback)).toBeFalsy()
+        suggestion.callback()
+        expect(atom.workspace.open).toHaveBeenCalled()
+        path = atom.workspace.open.argsForCall[0][0]
+        expect(path.endsWith("1#{SEP}Keywords4.robot")).toBeTruthy()
+    it 'narrows suggestions by keyword library prefix', ->
+      waitsForPromise -> atom.workspace.open('gotodef/approximate-resource-imports/t3.robot')
+      runs -> editor = atom.workspace.getActiveTextEditor()
+      runs -> atom.workspace.open = jasmine.createSpy("atom.workspace.open() spy").andReturn(Promise.resolve())
+      runs ->
+        suggestion = hyperclickProvider.getSuggestion(editor, new Point(20, 5)) # gotodeflib1.My Third Keyword
+        expect(suggestion).toBeDefined()
+        expect(Array.isArray(suggestion.callback)).toBeFalsy()
+        suggestion.callback()
+        expect(atom.workspace.open).toHaveBeenCalled()
+        path = atom.workspace.open.argsForCall[0][0]
+        expect(path.endsWith("gotodeflib1.py")).toBeTruthy()
+      waitsForPromise -> atom.workspace.open('gotodef/approximate-resource-imports/t3.robot')
+      runs -> editor = atom.workspace.getActiveTextEditor()
+      runs -> atom.workspace.open = jasmine.createSpy("atom.workspace.open() spy").andReturn(Promise.resolve())
+      runs ->
+        suggestion = hyperclickProvider.getSuggestion(editor, new Point(21, 5)) # gotodeflib2.My Third Keyword
+        expect(suggestion).toBeDefined()
+        expect(Array.isArray(suggestion.callback)).toBeFalsy()
+        suggestion.callback()
+        expect(atom.workspace.open).toHaveBeenCalled()
+        path = atom.workspace.open.argsForCall[0][0]
+        expect(path.endsWith("gotodeflib2.py")).toBeTruthy()
   describe 'Accurate import resolution',  ->
     it 'proposes one suggestion when single import is determined', ->
       waitsForPromise -> atom.workspace.open('gotodef/accurate-resource-imports/t1.robot')
@@ -304,6 +351,30 @@ describe 'Robot Framework Hyperclick',  ->
         expect(atom.workspace.open).toHaveBeenCalled()
         path = atom.workspace.open.argsForCall[0][0]
         expect(path.endsWith("1#{SEP}aci2.robot")).toBeTruthy()
+    it 'narrows suggestions by keyword prefix', ->
+      waitsForPromise -> atom.workspace.open('gotodef/accurate-resource-imports/t2.robot')
+      runs -> editor = atom.workspace.getActiveTextEditor()
+      runs -> atom.workspace.open = jasmine.createSpy("atom.workspace.open() spy").andReturn(Promise.resolve())
+      runs ->
+        suggestion = hyperclickProvider.getSuggestion(editor, new Point(18, 5))  # Keywords1.My first keyword
+        expect(suggestion).toBeDefined()
+        expect(Array.isArray(suggestion.callback)).toBeFalsy()
+        suggestion.callback()
+        expect(atom.workspace.open).toHaveBeenCalled()
+        path = atom.workspace.open.argsForCall[0][0]
+        expect(path.endsWith("0#{SEP}Keywords1.robot")).toBeTruthy()
+
+      waitsForPromise -> atom.workspace.open('gotodef/accurate-resource-imports/t2.robot')
+      runs -> editor = atom.workspace.getActiveTextEditor()
+      runs -> atom.workspace.open = jasmine.createSpy("atom.workspace.open() spy").andReturn(Promise.resolve())
+      runs ->
+        suggestion = hyperclickProvider.getSuggestion(editor, new Point(19, 5))  # Keywords2.My first keyword
+        expect(suggestion).toBeDefined()
+        expect(Array.isArray(suggestion.callback)).toBeFalsy()
+        suggestion.callback()
+        expect(atom.workspace.open).toHaveBeenCalled()
+        path = atom.workspace.open.argsForCall[0][0]
+        expect(path.endsWith("0#{SEP}Keywords2.robot")).toBeTruthy()
   describe 'Hyperclick into imported resources',  ->
     it 'suggests accurate relative import in different directory', ->
       waitsForPromise -> atom.workspace.open('gotodef/accurate-resource-imports/t1.robot')

@@ -18,3 +18,5 @@ test gotodef 1
     Impkw
     impkwx
     impkwy
+    gotodeflib1.My Third Keyword
+    gotodeflib2.My Third Keyword
